@@ -83,15 +83,5 @@ services:
             - name: 'sentry.integration'
               identifier: 'sentry-transaction'
 
-    Sentry\Integration\IgnoreErrorsIntegration:
-        tags:
-            - name: 'sentry.integration'
-              identifier: 'sentry-ignore-errors'
-              after: 'typo3-command'
-        arguments:
-            $options:
-                ignore_exceptions: [ ]
-                ignore_tags: { }
-
     Sentry\Integration\RequestFetcherInterface:
         class: Helhum\SentryTypo3\Integration\RequestFetcher

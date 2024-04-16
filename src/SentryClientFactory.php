@@ -6,7 +6,6 @@ namespace Helhum\SentryTypo3;
 
 use Composer\InstalledVersions;
 use GuzzleHttp\Client as GuzzleHttpClient;
-use Http\Adapter\Guzzle7\Client;
 use Psr\Log\LoggerInterface;
 use Sentry\Client as SentryClient;
 use Sentry\ClientBuilder;
@@ -15,10 +14,6 @@ use Sentry\HttpClient\HttpClientFactory;
 use Sentry\Integration\IntegrationInterface;
 use Sentry\Transport\DefaultTransportFactory;
 use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Http\ResponseFactory;
-use TYPO3\CMS\Core\Http\StreamFactory;
-use TYPO3\CMS\Core\Http\UriFactory;
 
 final class SentryClientFactory
 {
@@ -30,8 +25,7 @@ final class SentryClientFactory
      */
     public function __construct(
         private readonly array $integrations,
-        private readonly LoggerInterface $logger,
-        private readonly GuzzleHttpClient $typo3HttpClient,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -68,22 +62,6 @@ final class SentryClientFactory
         $clientBuilder->setSdkVersion($sdkVersion);
         $clientBuilder->setLogger($this->logger);
 
-        $streamFactory = new StreamFactory();
-        $httpClientFactory = new HttpClientFactory(
-            new UriFactory(),
-            new ResponseFactory(),
-            $streamFactory,
-            new Client($this->typo3HttpClient),
-            self::SDK_IDENTIFIER,
-            $sdkVersion
-        );
-        $transportFactory = new DefaultTransportFactory(
-            $streamFactory,
-            new RequestFactory(),
-            $httpClientFactory,
-            $this->logger
-        );
-        $clientBuilder->setTransportFactory($transportFactory);
         return $clientBuilder->getClient();
     }
 }
