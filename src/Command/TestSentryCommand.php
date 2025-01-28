@@ -41,7 +41,7 @@ final class TestSentryCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->logger->error(
             'If you see this message in Sentry, everything is configured correctly 🎉',
